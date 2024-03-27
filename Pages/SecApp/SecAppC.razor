@@ -1,0 +1,49 @@
+﻿@    using BlazorServerAppBanco.ModelsDTO;
+@    using BlazorServerAppBanco.Services;
+@    using BlazorServerAppBanco.Models;
+    using BlazorServerAppBanco.ModelsDTO.Users;
+
+@page "/secAppC"
+@inject ISecAppService secAppService;
+@inject NavigationManager navigationManager;
+@inject IJSRuntime JSRuntime;
+
+<h3>SecAppC</h3>
+
+@if (secApps?.Count() > 0)
+{
+    <div class="products-container">
+        @foreach (var user in secApps)
+        {
+            //logger.LogInformation($"log: {product.images[0].Trim('[', ']')}");
+            <div class="card">
+                @* <img class="card-img-top" src="@user.images[0]" alt="user" loading="lazy" width="270" height="210"> *@
+
+                <div class="card-body">
+                    <h4><b>@user.AppName</b></h4>
+                    <p>@user.AppType</p>
+                    @*                     <button title="Delete" class="btn btn-danger btn-delete" @onclick="@(() => deleteusers(user))"><span class="oi oi-trash"></span></button>
+            <button title="Update" class="btn btn-info" @onclick="@(() => GoToUpdateusers(user.id))"><span class="oi btn-outline-info"></span></button> *@
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>No existen usuarios</p>
+}
+
+@code {
+    public List<SecAppDTO>? secApps;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Get();
+    }
+
+    public async Task Get()
+    {
+        secApps = await secAppService.GetAll();
+    }
+}

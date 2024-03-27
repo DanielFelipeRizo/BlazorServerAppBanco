@@ -5,24 +5,29 @@ using BlazorServerAppBanco.ModelsDTO.Users;
 
 namespace BlazorServerAppBanco.Services
 {
-    public class SecUserService : ISecUserService
+    public class SecAppService : ISecAppService
     {
         public readonly TransactionalBankContext _transactionalBankContext;
         private readonly IMapper _mapper;
 
-        public SecUserService(TransactionalBankContext context, IMapper mapper)
+        public SecAppService(TransactionalBankContext context, IMapper mapper)
         {
             _transactionalBankContext = context;
             _mapper = mapper;
         }
 
-        public async Task<List<SecUserDTO>> GetAll()
+        public async Task<List<SecAppDTO>> GetAll()
         {
-            List<SecUser> secUsers = await _transactionalBankContext.SecUsers.ToListAsync();
-            Console.WriteLine(secUsers);
-            return _mapper.Map<List<SecUserDTO>>(secUsers);
-            //return await _transactionalBankContext.SecUsers.ToListAsync();
+            List<SecApp> secApps = await _transactionalBankContext.SecApps.ToListAsync();
+            return _mapper.Map<List<SecAppDTO>>(secApps);
+            //return secApps;
         }
+
+        //public async Task<List<SecApp>> GetAll()
+        //{
+        //    List<SecApp> secApps = await _transactionalBankContext.SecApps.ToListAsync();
+        //    return secApps;
+        //}
 
         public async Task<SecUserDTO?> GetById(string id)
         {
@@ -37,14 +42,12 @@ namespace BlazorServerAppBanco.Services
             }
         }
 
-        public async Task<int> Add(SecUserDTO secUserDTO)
+        public async Task<int> Save(SecUserDTO secUserDTO)
         {
             try
             {
                 SecUser secUser = _mapper.Map<SecUser>(secUserDTO);
-                secUser.UsrActive = "Y";
                 await _transactionalBankContext.AddAsync(secUser);
-                //INSERT INTO sec_users_groups(login, secUserDTO.userRole)VALUES('". {login}."','". {Tusuario}. "')
                 return await _transactionalBankContext.SaveChangesAsync();
             }
             catch (Exception e)
@@ -100,12 +103,14 @@ namespace BlazorServerAppBanco.Services
         }
     }
 
-    public interface ISecUserService
+    public interface ISecAppService
     {
-        Task<List<SecUserDTO>> GetAll();
-        Task<SecUserDTO?> GetById(string id);
-        Task<int> Add(SecUserDTO secUserDTO);
-        Task Update(SecUserDTO secUserDTO);
-        Task Delete(string id);
+        //Task<List<SecApp>> GetAll();
+        Task<List<SecAppDTO>> GetAll();
+        //Task<List<Device>> GetAll1();
+        //Task<SecUserDTO?> GetById(string id);
+        //Task<int> Save(SecUserDTO secUserDTO);
+        //Task Update(SecUserDTO secUserDTO);
+        //Task Delete(string id);
     }
 }

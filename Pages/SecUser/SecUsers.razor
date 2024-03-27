@@ -1,7 +1,8 @@
-﻿@using BlazorServerAppBanco.ModelsDTO;
-@using BlazorServerAppBanco.Services;
+﻿@    using BlazorServerAppBanco.ModelsDTO;
+@    using BlazorServerAppBanco.Services;
+    using BlazorServerAppBanco.ModelsDTO.Users;
 
-@page "/secUsers"
+@page "/secUserC"
 @inject ILogger<SecUserDTO> logger;
 @inject ISecUserService secUserService;
 @inject NavigationManager navigationManager;
@@ -13,26 +14,40 @@
 
 <h1>Users</h1>
 
-@* <button class="btn btn-primary" @onclick="GoToAddProducts">Go to addProducts</button>
-<button title="Update" class="btn btn-info" @onclick="MostrarAlerta"><span class="oi btn-outline-info"></span></button>
- *@
-@if (!secUsers.Any() || secUsers.Count() > 0)
-{
-    <div class="products-container">
-        @foreach (var user in secUsers)
-        {
-            //logger.LogInformation($"log: {product.images[0].Trim('[', ']')}");
-            <div class="card">
-                @* <img class="card-img-top" src="@user.images[0]" alt="user" loading="lazy" width="270" height="210"> *@
+<button class="btn btn-primary" @onclick="GoToAddUsers">Go to addProducts</button>
 
-                <div class="card-body">
-                    <h4><b>@user.Name</b></h4>
-                    <p>@user.Email</p>
-@*                     <button title="Delete" class="btn btn-danger btn-delete" @onclick="@(() => deleteusers(user))"><span class="oi oi-trash"></span></button>
-                    <button title="Update" class="btn btn-info" @onclick="@(() => GoToUpdateusers(user.id))"><span class="oi btn-outline-info"></span></button> *@
-                </div>
-            </div>
-        }
+@if (users?.Count() > 0)
+{
+    <div class="users-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Estado</th>
+                    <th>Tipo usuario</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in users)
+                {
+                    <tr>
+                        <td>@user.Login</td>
+                        <td>@user.Name</td>
+                        <td>@user.Email</td>
+                        <td>@(user.UsrActive == "Y" ? "Activo" : "Inactivo")</td>
+                        <td>por definir</td>
+                        <td>
+                            <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="@(() => GoToUpdateUsers(user.Login))">a</MudButton>
+                                
+                            <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="@(() => deleteUsers(user))">e</MudButton>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 }
 else
@@ -41,7 +56,7 @@ else
 }
 
 @code {
-    private List<SecUserDTO> secUsers;
+    private List<SecUserDTO>? users;
 
     protected override async Task OnInitializedAsync()
     {
@@ -50,6 +65,31 @@ else
 
     public async Task Get()
     {
-        secUsers = await secUserService.GetAll();
+        users = await secUserService.GetAll();
+    }
+
+    private void GoToAddUsers()
+    {
+        navigationManager.NavigateTo("/addUser");
+    }
+
+    private void GoToUpdateUsers(string userId)
+    {
+        navigationManager.NavigateTo($"/updateUser/{userId}");
+    }
+
+    private async Task deleteUsers(SecUserDTO user)
+    {
+        var confirmation = await JSRuntime.InvokeAsync<bool>("showSweetAlert", "Eliminar registro?", $"esta seguro que desea eliminar {user.Name}?");
+        if (!confirmation)
+        {
+            return;
+        }
+        await secUserService.Delete(user.Login);
+        await Get();
     }
 }
+
+<script src="alerts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ 

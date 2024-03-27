@@ -6,6 +6,7 @@ using BlazorServerAppBanco.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,8 +22,12 @@ builder.Services.AddAutoMapper(typeof(Program)); // Esto registra automáticament
 builder.Services.AddDbContext<TransactionalBankContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+//inyectar libreria mudblazor
+builder.Services.AddMudServices();
+
 //inyectar dependencia de la carpeta services(inyector)
 builder.Services.AddScoped<ISecUserService, SecUserService>();
+builder.Services.AddScoped<ISecAppService, SecAppService>();
 
 var app = builder.Build();
 
@@ -48,3 +53,5 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
 app.Run();
+
+//dotnet ef dbcontext scaffold "Host=localhost;Database=transactional_bank;Username=postgres;Password=12345" Npgsql.EntityFrameworkCore.PostgreSQL

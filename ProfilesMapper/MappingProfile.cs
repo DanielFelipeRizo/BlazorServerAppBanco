@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BlazorServerAppBanco.Models;
-using BlazorServerAppBanco.ModelsDTO;
+using BlazorServerAppBanco.ModelsDTO.Users;
 
 namespace BlazorServerAppBanco.ProfilesMapper
 {
@@ -9,6 +9,7 @@ namespace BlazorServerAppBanco.ProfilesMapper
         public MappingProfile()
         {
             CreateMap<SecUser, SecUserDTO>().ReverseMap();
+            CreateMap<SecApp, SecAppDTO>().ReverseMap();
         }
     }
 }

@@ -1,0 +1,95 @@
+﻿@    using BlazorServerAppBanco.ModelsDTO;
+@    using BlazorServerAppBanco.Services;
+    using BlazorServerAppBanco.ModelsDTO.Users;
+
+@page "/addUser"
+@inject ILogger<SecUserDTO> logger;
+@inject ISecUserService secUserService;
+@inject NavigationManager navigationManager;
+@inject IJSRuntime JSRuntime;
+
+<PageTitle>Add - Users</PageTitle>
+
+<h3>AddUser</h3>
+
+<button class="btn btn-primary" @onclick="GoToUsers">Go to users</button>
+
+<EditForm Model="@user" OnSubmit="@addUsers">
+
+    <div class="row">
+        <div class="col-8 form-group">
+            <label for="usuario" class="col-form-label">Usuario</label>
+            <InputText id="usuario" @bind-Value="user.Login" required class="form-control"></InputText>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-8 form-group">
+            <label for="password" class="col-form-label">Password</label>
+            <InputText id="password" @bind-Value="user.Pswd" required class="form-control"></InputText>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-8 form-group">
+            <label for="password" class="col-form-label">Password</label>
+            <InputText id="password" @bind-Value="user.Pswd" required class="form-control"></InputText>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-8 form-group">
+            <label for="name" class="col-form-label">Nombre</label>
+            <InputText id="name" @bind-Value="user.Name" required class="form-control"></InputText>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-8 form-group">
+            <label for="tagUser" class="col-form-label">tagUser</label>
+            <InputNumber id="tagUser" @bind-Value="user.TagUser" required class="form-control"></InputNumber>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-8 form-group">
+            <label for="email" class="col-form-label">Email</label>
+            <InputText id="email" @bind-Value="user.Email" required class="form-control"></InputText>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-8 form-group">
+            <label for="role" class="col-form-label">Rol</label>
+            <InputNumber id="role" @bind-Value = "user.userRole" required class="form-control"></InputNumber>
+        </div>
+    </div>
+
+    <hr />
+    <button class="btn btn-primary" type="submit">Add</button>
+
+</EditForm>
+
+
+@code {
+    private SecUserDTO user = new();
+
+    public async Task addUsers()
+    {
+        int insert = await secUserService.Add(user);
+
+        if(insert == 1)
+        {
+            GoToUsers();
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("showErrorAlert");
+        }
+    }
+
+    private void GoToUsers()
+    {
+        navigationManager.NavigateTo("/secUserC");
+    }
+}
