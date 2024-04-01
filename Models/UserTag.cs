@@ -11,7 +11,7 @@ public partial class UserTag
 
     public string? UserTagsDescription { get; set; }
 
-    public long UserTagsStatus { get; set; }
+    public bool? UserTagsStatus { get; set; }
 
     public string? CreatedBy { get; set; }
 

@@ -16,13 +16,11 @@ public partial class Customer
 
     public string DownloadPort { get; set; } = null!;
 
-    public long StatusTypeId { get; set; }
+    public bool? StatusTypeId { get; set; }
 
     public DateTime CreationDate { get; set; }
 
     public DateTime? UpdateDate { get; set; }
 
     public BitArray? SelfLearning { get; set; }
-
-    public virtual StatusType StatusType { get; set; } = null!;
 }

@@ -161,7 +161,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("audit_initialization_pkey");
 
-            entity.ToTable("audit_initialization", "bancosol");
+            entity.ToTable("audit_initialization", "bank");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.DeviceId)
@@ -209,7 +209,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("audit_transactions_pkey");
 
-            entity.ToTable("audit_transactions", "bancosol");
+            entity.ToTable("audit_transactions", "bank");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ApiAccountId)
@@ -334,7 +334,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.BranchId).HasName("branches_pkey");
 
-            entity.ToTable("branches", "bancosol");
+            entity.ToTable("branches", "bank");
 
             entity.Property(e => e.BranchId)
                 .HasDefaultValueSql("nextval('branches_branch_id_seq'::regclass)")
@@ -418,7 +418,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.BranchTransactionHoursId).HasName("branches_transactions_hours_pkey");
 
-            entity.ToTable("branches_transactions_hours", "bancosol");
+            entity.ToTable("branches_transactions_hours", "bank");
 
             entity.Property(e => e.BranchTransactionHoursId)
                 .HasDefaultValueSql("nextval('branches_transactions_hours_branch_transaction_hours_id_seq'::regclass)")
@@ -450,7 +450,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => new { e.TemplateId, e.KeyId, e.KeyRid }).HasName("capks_pkey");
 
-            entity.ToTable("capks", "bancosol");
+            entity.ToTable("capks", "bank");
 
             entity.Property(e => e.TemplateId)
                 .HasMaxLength(500)
@@ -499,7 +499,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.KeyExponent).HasName("capks_exponents_pkey");
 
-            entity.ToTable("capks_exponents", "bancosol");
+            entity.ToTable("capks_exponents", "bank");
 
             entity.Property(e => e.KeyExponent)
                 .HasMaxLength(100)
@@ -510,7 +510,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.KeyRid).HasName("capks_rids_pkey");
 
-            entity.ToTable("capks_rids", "bancosol");
+            entity.ToTable("capks_rids", "bank");
 
             entity.HasIndex(e => e.Provider, "unique_provider").IsUnique();
 
@@ -526,7 +526,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.KeySize).HasName("capks_sizes_pkey");
 
-            entity.ToTable("capks_sizes", "bancosol");
+            entity.ToTable("capks_sizes", "bank");
 
             entity.Property(e => e.KeySize)
                 .HasMaxLength(200)
@@ -537,7 +537,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.CardTypeId).HasName("pk_card_type_id");
 
-            entity.ToTable("card_type", "bancosol");
+            entity.ToTable("card_type", "bank");
 
             entity.Property(e => e.CardTypeId)
                 .HasDefaultValueSql("nextval('card_type_card_type_id_seq'::regclass)")
@@ -551,7 +551,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.CityId).HasName("cities_pkey");
 
-            entity.ToTable("cities", "bancosol");
+            entity.ToTable("cities", "bank");
 
             entity.HasIndex(e => e.Code, "cities_code_key").IsUnique();
 
@@ -576,7 +576,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.CommerceId).HasName("pk_commerce");
 
-            entity.ToTable("commerces", "bancosol");
+            entity.ToTable("commerces", "bank");
 
             entity.Property(e => e.CommerceId)
                 .HasDefaultValueSql("nextval('commerces_commerce_id_seq'::regclass)")
@@ -624,7 +624,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.Code).HasName("countries_pkey");
 
-            entity.ToTable("countries", "bancosol");
+            entity.ToTable("countries", "bank");
 
             entity.Property(e => e.Code)
                 .HasMaxLength(50)
@@ -649,7 +649,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.CreditPaymentId).HasName("credit_payment_pkey");
 
-            entity.ToTable("credit_payment", "bancosol");
+            entity.ToTable("credit_payment", "bank");
 
             entity.Property(e => e.CreditPaymentId)
                 .HasDefaultValueSql("nextval('credit_payment_credit_payment_id_seq'::regclass)")
@@ -795,7 +795,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.CtlFilesId).HasName("ctl_files_pkey");
 
-            entity.ToTable("ctl_files", "bancosol");
+            entity.ToTable("ctl_files", "bank");
 
             entity.Property(e => e.CtlFilesId)
                 .HasDefaultValueSql("nextval('ctl_files_ctl_files_id_seq'::regclass)")
@@ -816,7 +816,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("customer_pkey");
 
-            entity.ToTable("customer", "bancosol");
+            entity.ToTable("customer", "bank");
 
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("nextval('customer_id_seq'::regclass)")
@@ -843,18 +843,13 @@ public partial class TransactionalBankContext : DbContext
             entity.Property(e => e.UpdateDate)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("update_date");
-
-            entity.HasOne(d => d.StatusType).WithMany(p => p.Customers)
-                .HasForeignKey(d => d.StatusTypeId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("customer_status_type_id_fkey");
         });
 
         modelBuilder.Entity<DayTransaction>(entity =>
         {
             entity.HasKey(e => e.DayTransactionId).HasName("day_transactions_pkey");
 
-            entity.ToTable("day_transactions", "bancosol");
+            entity.ToTable("day_transactions", "bank");
 
             entity.Property(e => e.DayTransactionId)
                 .HasMaxLength(100)
@@ -868,7 +863,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.DepartmentId).HasName("departments_pkey");
 
-            entity.ToTable("departments", "bancosol");
+            entity.ToTable("departments", "bank");
 
             entity.Property(e => e.DepartmentId)
                 .HasDefaultValueSql("nextval('departments_department_id_seq'::regclass)")
@@ -889,7 +884,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.DepositId).HasName("deposits_pkey");
 
-            entity.ToTable("deposits", "bancosol");
+            entity.ToTable("deposits", "bank");
 
             entity.Property(e => e.DepositId)
                 .HasDefaultValueSql("nextval('deposits_deposit_id_seq'::regclass)")
@@ -1020,7 +1015,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.DeviceId).HasName("devices_pkey");
 
-            entity.ToTable("devices", "bancosol");
+            entity.ToTable("devices", "bank");
 
             entity.HasIndex(e => e.SerialNumber, "devices_serial_number_key").IsUnique();
 
@@ -1136,10 +1131,6 @@ public partial class TransactionalBankContext : DbContext
                 .HasForeignKey(d => d.DeviceTypeId)
                 .HasConstraintName("fk_device_type_id");
 
-            entity.HasOne(d => d.StatusType).WithMany(p => p.Devices)
-                .HasForeignKey(d => d.StatusTypeId)
-                .HasConstraintName("fk_status_type_id");
-
             entity.HasOne(d => d.UpdateStatusDevice).WithMany(p => p.Devices)
                 .HasForeignKey(d => d.UpdateStatusDeviceId)
                 .HasConstraintName("fk_update_status_id");
@@ -1149,7 +1140,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.DeviceBrandId).HasName("pk_device_brand_id");
 
-            entity.ToTable("device_brands", "bancosol");
+            entity.ToTable("device_brands", "bank");
 
             entity.Property(e => e.DeviceBrandId)
                 .HasDefaultValueSql("nextval('device_brands_device_brand_id_seq'::regclass)")
@@ -1163,7 +1154,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.DeviceInterfaceId).HasName("pk_device_interface_id");
 
-            entity.ToTable("device_interfaces", "bancosol");
+            entity.ToTable("device_interfaces", "bank");
 
             entity.Property(e => e.DeviceInterfaceId)
                 .HasDefaultValueSql("nextval('device_interfaces_device_interface_id_seq'::regclass)")
@@ -1177,7 +1168,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.DeviceModelId).HasName("pk_device_model_id");
 
-            entity.ToTable("device_models", "bancosol");
+            entity.ToTable("device_models", "bank");
 
             entity.Property(e => e.DeviceModelId)
                 .HasDefaultValueSql("nextval('device_models_device_model_id_seq'::regclass)")
@@ -1191,7 +1182,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.DeviceTagId).HasName("device_tags_pkey");
 
-            entity.ToTable("device_tags", "bancosol");
+            entity.ToTable("device_tags", "bank");
 
             entity.Property(e => e.DeviceTagId)
                 .HasDefaultValueSql("nextval('device_tags_device_tag_id_seq'::regclass)")
@@ -1220,7 +1211,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.DeviceTypeId).HasName("pk_device_type_id");
 
-            entity.ToTable("device_types", "bancosol");
+            entity.ToTable("device_types", "bank");
 
             entity.Property(e => e.DeviceTypeId)
                 .HasDefaultValueSql("nextval('device_types_device_type_id_seq'::regclass)")
@@ -1234,7 +1225,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.Aid).HasName("emvapps_aids_pkey");
 
-            entity.ToTable("emvapps_aids", "bancosol");
+            entity.ToTable("emvapps_aids", "bank");
 
             entity.HasIndex(e => e.Name, "unique_name_aids").IsUnique();
 
@@ -1250,7 +1241,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => new { e.TemplateId, e.Aid, e.Tag }).HasName("emvapps_detail_pkey");
 
-            entity.ToTable("emvapps_detail", "bancosol");
+            entity.ToTable("emvapps_detail", "bank");
 
             entity.Property(e => e.TemplateId)
                 .HasMaxLength(500)
@@ -1290,7 +1281,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => new { e.TemplateId, e.Aid }).HasName("emvapps_master_pkey");
 
-            entity.ToTable("emvapps_master", "bancosol");
+            entity.ToTable("emvapps_master", "bank");
 
             entity.Property(e => e.TemplateId)
                 .HasMaxLength(500)
@@ -1314,7 +1305,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.Tag).HasName("emvapps_tags_pkey");
 
-            entity.ToTable("emvapps_tags", "bancosol");
+            entity.ToTable("emvapps_tags", "bank");
 
             entity.HasIndex(e => e.Name, "unique_name_tags").IsUnique();
 
@@ -1330,7 +1321,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity
                 .HasNoKey()
-                .ToTable("encryptors", "bancosol");
+                .ToTable("encryptors", "bank");
 
             entity.Property(e => e.EncryptorDate)
                 .HasColumnType("timestamp without time zone")
@@ -1346,7 +1337,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.CreditPaymentId).HasName("historical_credit_payment_pkey");
 
-            entity.ToTable("historical_credit_payment", "bancosol");
+            entity.ToTable("historical_credit_payment", "bank");
 
             entity.Property(e => e.CreditPaymentId)
                 .HasDefaultValueSql("nextval('historical_credit_payment_credit_payment_id_seq'::regclass)")
@@ -1492,7 +1483,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.DepositId).HasName("historical_deposit_pkey");
 
-            entity.ToTable("historical_deposit", "bancosol");
+            entity.ToTable("historical_deposit", "bank");
 
             entity.Property(e => e.DepositId)
                 .HasDefaultValueSql("nextval('historical_deposit_deposit_id_seq'::regclass)")
@@ -1623,7 +1614,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.PaymentServicesId).HasName("historical_payment_services_pkey");
 
-            entity.ToTable("historical_payment_services", "bancosol");
+            entity.ToTable("historical_payment_services", "bank");
 
             entity.Property(e => e.PaymentServicesId)
                 .HasDefaultValueSql("nextval('historical_payment_services_payment_services_id_seq'::regclass)")
@@ -1760,7 +1751,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.WithdrawalId).HasName("historical_withdrawal_pkey");
 
-            entity.ToTable("historical_withdrawal", "bancosol");
+            entity.ToTable("historical_withdrawal", "bank");
 
             entity.Property(e => e.WithdrawalId)
                 .HasDefaultValueSql("nextval('historical_withdrawal_withdrawal_id_seq'::regclass)")
@@ -1888,7 +1879,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.LicenseForCustomerId).HasName("license_for_customer_pkey");
 
-            entity.ToTable("license_for_customer", "bancosol");
+            entity.ToTable("license_for_customer", "bank");
 
             entity.Property(e => e.LicenseForCustomerId)
                 .HasDefaultValueSql("nextval('license_for_customer_license_for_customer_id_seq'::regclass)")
@@ -1918,7 +1909,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.LicenseTypeId).HasName("license_type_pkey");
 
-            entity.ToTable("license_type", "bancosol");
+            entity.ToTable("license_type", "bank");
 
             entity.Property(e => e.LicenseTypeId)
                 .HasDefaultValueSql("nextval('license_type_license_type_id_seq'::regclass)")
@@ -1933,7 +1924,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity
                 .HasNoKey()
-                .ToTable("log_transactions", "bancosol");
+                .ToTable("log_transactions", "bank");
 
             entity.Property(e => e.Application)
                 .HasMaxLength(128)
@@ -1962,7 +1953,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity
                 .HasNoKey()
-                .ToTable("logs_functions", "bancosol");
+                .ToTable("logs_functions", "bank");
 
             entity.Property(e => e.LogCodeErrorChecked)
                 .HasMaxLength(250)
@@ -2000,7 +1991,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.ModuleId).HasName("pk_module_id");
 
-            entity.ToTable("modules", "bancosol");
+            entity.ToTable("modules", "bank");
 
             entity.Property(e => e.ModuleId)
                 .HasDefaultValueSql("nextval('modules_module_id_seq'::regclass)")
@@ -2014,7 +2005,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity
                 .HasNoKey()
-                .ToTable("modules_submodules_apps", "bancosol");
+                .ToTable("modules_submodules_apps", "bank");
 
             entity.Property(e => e.AppName)
                 .HasMaxLength(150)
@@ -2031,7 +2022,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.ObfuscationFieldId).HasName("obfuscation_fields_pkey");
 
-            entity.ToTable("obfuscation_fields", "bancosol");
+            entity.ToTable("obfuscation_fields", "bank");
 
             entity.Property(e => e.ObfuscationFieldId)
                 .HasDefaultValueSql("nextval('obfuscation_fields_obfuscation_field_id_seq'::regclass)")
@@ -2076,7 +2067,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.ObfuscationRuleId).HasName("obfuscation_rule_pkey");
 
-            entity.ToTable("obfuscation_rule", "bancosol");
+            entity.ToTable("obfuscation_rule", "bank");
 
             entity.Property(e => e.ObfuscationRuleId)
                 .HasDefaultValueSql("nextval('obfuscation_rule_obfuscation_rule_id_seq'::regclass)")
@@ -2105,7 +2096,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.ObfuscationRuleTypeId).HasName("obfuscation_rule_type_pkey");
 
-            entity.ToTable("obfuscation_rule_type", "bancosol");
+            entity.ToTable("obfuscation_rule_type", "bank");
 
             entity.Property(e => e.ObfuscationRuleTypeId)
                 .HasDefaultValueSql("nextval('obfuscation_rule_type_obfuscation_rule_type_id_seq'::regclass)")
@@ -2119,7 +2110,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.PaymentServicesId).HasName("payment_services_pkey");
 
-            entity.ToTable("payment_services", "bancosol");
+            entity.ToTable("payment_services", "bank");
 
             entity.Property(e => e.PaymentServicesId)
                 .HasDefaultValueSql("nextval('payment_services_payment_services_id_seq'::regclass)")
@@ -2256,7 +2247,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.PaymentStatusId).HasName("payment_status_pkey");
 
-            entity.ToTable("payment_status", "bancosol");
+            entity.ToTable("payment_status", "bank");
 
             entity.Property(e => e.PaymentStatusId)
                 .HasDefaultValueSql("nextval('payment_status_payment_status_id_seq'::regclass)")
@@ -2270,7 +2261,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.ProfileId).HasName("profiles_pkey");
 
-            entity.ToTable("profiles", "bancosol");
+            entity.ToTable("profiles", "bank");
 
             entity.Property(e => e.ProfileId)
                 .HasDefaultValueSql("nextval('profiles_profile_id_seq'::regclass)")
@@ -2312,7 +2303,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => new { e.TemplateId, e.RangeId }).HasName("ranges_pkey");
 
-            entity.ToTable("ranges", "bancosol");
+            entity.ToTable("ranges", "bank");
 
             entity.Property(e => e.TemplateId)
                 .HasMaxLength(500)
@@ -2362,7 +2353,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.RepresentativeId).HasName("representatives_pkey");
 
-            entity.ToTable("representatives", "bancosol");
+            entity.ToTable("representatives", "bank");
 
             entity.Property(e => e.RepresentativeId)
                 .HasDefaultValueSql("nextval('representatives_representative_id_seq'::regclass)")
@@ -2399,7 +2390,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.RepresentativeIdentificationTypeId).HasName("representative_identification_types_pkey");
 
-            entity.ToTable("representative_identification_types", "bancosol");
+            entity.ToTable("representative_identification_types", "bank");
 
             entity.Property(e => e.RepresentativeIdentificationTypeId)
                 .HasDefaultValueSql("nextval('representative_identification_representative_identification_seq'::regclass)")
@@ -2413,7 +2404,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("sc_log_pkey");
 
-            entity.ToTable("sc_log", "bancosol");
+            entity.ToTable("sc_log", "bank");
 
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("nextval('sc_log_id_seq'::regclass)")
@@ -2444,7 +2435,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.AppName).HasName("pk_sec_apps");
 
-            entity.ToTable("sec_apps", "bancosol");
+            entity.ToTable("sec_apps", "bank");
 
             entity.Property(e => e.AppName)
                 .HasMaxLength(150)
@@ -2458,7 +2449,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.SecEmailId).HasName("sec_email_pkey");
 
-            entity.ToTable("sec_email", "bancosol");
+            entity.ToTable("sec_email", "bank");
 
             entity.Property(e => e.SecEmailId)
                 .HasDefaultValueSql("nextval('sec_email_sec_email_id_seq'::regclass)")
@@ -2486,7 +2477,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.GroupId).HasName("sec_groups_pkey");
 
-            entity.ToTable("sec_groups", "bancosol");
+            entity.ToTable("sec_groups", "bank");
 
             entity.Property(e => e.GroupId)
                 .HasDefaultValueSql("nextval('sec_groups_group_id_seq'::regclass)")
@@ -2500,7 +2491,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => new { e.GroupId, e.AppName }).HasName("sec_groups_apps_pkey");
 
-            entity.ToTable("sec_groups_apps", "bancosol");
+            entity.ToTable("sec_groups_apps", "bank");
 
             entity.Property(e => e.GroupId).HasColumnName("group_id");
             entity.Property(e => e.AppName)
@@ -2542,7 +2533,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.Login).HasName("pk_sec_users");
 
-            entity.ToTable("sec_users", "bancosol");
+            entity.ToTable("sec_users", "bank");
 
             entity.Property(e => e.Login)
                 .HasMaxLength(150)
@@ -2609,7 +2600,7 @@ public partial class TransactionalBankContext : DbContext
                     j =>
                     {
                         j.HasKey("Login", "GroupId").HasName("sec_users_groups_pkey");
-                        j.ToTable("sec_users_groups", "bancosol");
+                        j.ToTable("sec_users_groups", "bank");
                         j.IndexerProperty<string>("Login")
                             .HasMaxLength(150)
                             .HasDefaultValueSql("''::character varying")
@@ -2622,7 +2613,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("sec_users_key_history_pkey");
 
-            entity.ToTable("sec_users_key_history", "bancosol");
+            entity.ToTable("sec_users_key_history", "bank");
 
             entity.Property(e => e.Id)
                 .HasDefaultValueSql("nextval('sec_users_key_history_id_seq'::regclass)")
@@ -2647,7 +2638,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.StatusTypeId).HasName("pk_status_type_id");
 
-            entity.ToTable("status_type", "bancosol");
+            entity.ToTable("status_type", "bank");
 
             entity.Property(e => e.StatusTypeId)
                 .HasDefaultValueSql("nextval('status_type_status_type_id_seq'::regclass)")
@@ -2661,7 +2652,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.SubmoduleId).HasName("pk_submodule_id");
 
-            entity.ToTable("submodules", "bancosol");
+            entity.ToTable("submodules", "bank");
 
             entity.Property(e => e.SubmoduleId)
                 .HasDefaultValueSql("nextval('submodules_submodule_id_seq'::regclass)")
@@ -2680,7 +2671,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.TableId).HasName("tables_pkey");
 
-            entity.ToTable("tables", "bancosol");
+            entity.ToTable("tables", "bank");
 
             entity.Property(e => e.TableId)
                 .HasDefaultValueSql("nextval('tables_table_id_seq'::regclass)")
@@ -2707,7 +2698,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.TemplateId).HasName("template_branches_hours_pkey");
 
-            entity.ToTable("template_branches_hours", "bancosol");
+            entity.ToTable("template_branches_hours", "bank");
 
             entity.Property(e => e.TemplateId)
                 .HasMaxLength(200)
@@ -2718,7 +2709,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.TemplateId).HasName("template_capks_pkey");
 
-            entity.ToTable("template_capks", "bancosol");
+            entity.ToTable("template_capks", "bank");
 
             entity.Property(e => e.TemplateId)
                 .HasMaxLength(500)
@@ -2729,7 +2720,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.TemplateId).HasName("template_emvapps_pkey");
 
-            entity.ToTable("template_emvapps", "bancosol");
+            entity.ToTable("template_emvapps", "bank");
 
             entity.Property(e => e.TemplateId)
                 .HasMaxLength(500)
@@ -2740,7 +2731,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.TemplateId).HasName("template_ranges_pkey");
 
-            entity.ToTable("template_ranges", "bancosol");
+            entity.ToTable("template_ranges", "bank");
 
             entity.Property(e => e.TemplateId)
                 .HasMaxLength(500)
@@ -2751,7 +2742,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.TemplateId).HasName("template_transactions_pkey");
 
-            entity.ToTable("template_transactions", "bancosol");
+            entity.ToTable("template_transactions", "bank");
 
             entity.Property(e => e.TemplateId)
                 .HasMaxLength(500)
@@ -2762,7 +2753,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => new { e.TemplateId, e.TransactionId }).HasName("transactions_pkey");
 
-            entity.ToTable("transactions", "bancosol");
+            entity.ToTable("transactions", "bank");
 
             entity.Property(e => e.TemplateId)
                 .HasMaxLength(500)
@@ -2816,7 +2807,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.TypeCommerceId).HasName("types_commerce_pkey");
 
-            entity.ToTable("types_commerce", "bancosol");
+            entity.ToTable("types_commerce", "bank");
 
             entity.Property(e => e.TypeCommerceId)
                 .HasDefaultValueSql("nextval('types_commerce_type_commerce_id_seq'::regclass)")
@@ -2845,7 +2836,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.UpdateStatusDeviceId).HasName("pk_update_status_device_id");
 
-            entity.ToTable("update_status_device", "bancosol");
+            entity.ToTable("update_status_device", "bank");
 
             entity.Property(e => e.UpdateStatusDeviceId)
                 .HasDefaultValueSql("nextval('update_status_device_update_status_device_id_seq'::regclass)")
@@ -2859,7 +2850,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.UserTagId).HasName("user_tags_pkey");
 
-            entity.ToTable("user_tags", "bancosol");
+            entity.ToTable("user_tags", "bank");
 
             entity.Property(e => e.UserTagId)
                 .HasDefaultValueSql("nextval('user_tags_user_tag_id_seq'::regclass)")
@@ -2889,7 +2880,7 @@ public partial class TransactionalBankContext : DbContext
         {
             entity.HasKey(e => e.WithdrawalId).HasName("withdrawal_pkey");
 
-            entity.ToTable("withdrawal", "bancosol");
+            entity.ToTable("withdrawal", "bank");
 
             entity.Property(e => e.WithdrawalId)
                 .HasDefaultValueSql("nextval('withdrawal_withdrawal_id_seq'::regclass)")

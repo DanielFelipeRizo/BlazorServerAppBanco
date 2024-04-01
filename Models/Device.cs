@@ -73,7 +73,7 @@ public partial class Device
 
     public int? ProfileId { get; set; }
 
-    public long? StatusTypeId { get; set; }
+    public bool? StatusTypeId { get; set; }
 
     public long CommerceId { get; set; }
 
@@ -92,8 +92,6 @@ public partial class Device
     public virtual DeviceTag? DeviceTag { get; set; }
 
     public virtual DeviceType? DeviceType { get; set; }
-
-    public virtual StatusType? StatusType { get; set; }
 
     public virtual UpdateStatusDevice? UpdateStatusDevice { get; set; }
 }
