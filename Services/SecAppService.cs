@@ -10,9 +10,9 @@ namespace BlazorServerAppBanco.Services
         public readonly TransactionalBankContext _transactionalBankContext;
         private readonly IMapper _mapper;
 
-        public SecAppService(TransactionalBankContext context, IMapper mapper)
+        public SecAppService(TransactionalBankContext transactionalBankContext, IMapper mapper)
         {
-            _transactionalBankContext = context;
+            _transactionalBankContext = transactionalBankContext;
             _mapper = mapper;
         }
 

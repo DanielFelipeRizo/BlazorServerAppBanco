@@ -1,0 +1,71 @@
+﻿@using BlazorServerAppBanco.Services;
+@using BlazorServerAppBanco.Models;
+@using BlazorServerAppBanco.ModelsDTO.Users;
+
+@page "/secGroup"
+@inject ISecUserGroupService secUserGroupService;
+@inject NavigationManager navigationManager;
+@inject IJSRuntime JSRuntime;
+
+<h3>SecGroups</h3>
+
+<MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="@(() => AddGroups())">Add</MudButton>
+
+@if (secGroups?.Count() > 0)
+{
+    <div class="products-container">
+        @foreach (var group in secGroups)
+        {
+            <div class="card">
+
+                <div class="card-body">
+                    <p>@group.Description</p>
+                    <p>
+                        <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="@(() => UpdateGroups(group))">a</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="@(() => DeleteGroups(group))">e</MudButton>
+                    </p>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>No existen grupos</p>
+}
+
+
+@code {
+    public List<SecGroupDTO>? secGroups;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Get();
+    }
+
+    public async Task Get()
+    {
+        secGroups = await secUserGroupService.GetAll();
+    }
+
+    private void AddGroups()
+    {
+        //navigationManager.NavigateTo("/addUser");
+    }
+
+    private void UpdateGroups(SecGroupDTO secGroupDTO)
+    {
+        //navigationManager.NavigateTo($"/updateUser/{userId}");
+    }
+
+    private async Task DeleteGroups(SecGroupDTO secGroupDTO)
+    {
+        var confirmation = await JSRuntime.InvokeAsync<bool>("showSweetAlert", "Eliminar registro?", $"esta seguro que desea eliminar {secGroupDTO.Description}?");
+        if (!confirmation)
+        {
+            return;
+        }
+        await secUserGroupService.Delete(secGroupDTO);
+        await Get();
+    }
+}
