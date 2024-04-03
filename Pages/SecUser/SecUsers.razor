@@ -8,7 +8,6 @@
 @inject NavigationManager navigationManager;
 @inject IJSRuntime JSRuntime;
 
-
 <PageTitle>SecUsers</PageTitle>
 <h3>SecUsers</h3>
 
@@ -22,12 +21,12 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Usuario</th>
-                    <th>Nombre</th>
-                    <th>Correo</th>
-                    <th>Estado</th>
-                    <th>Tipo usuario</th>
-                    <th>Acciones</th>
+                    <th>User</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Role</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -51,7 +50,7 @@
 }
 else
 {
-    <p>No existen usuarios</p>
+    <p>No users</p>
 }
 
 @code {

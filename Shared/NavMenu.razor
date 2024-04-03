@@ -21,7 +21,7 @@
         </div>
         <div class="nav-item px-3">
             <span class="nav-link" @onclick="ToggleUsersSubMenu">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Users
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Security
                 <span class="oi oi-caret-bottom ml-auto" aria-hidden="true"></span>
             </span>
             @if (showUsersSubMenu)
@@ -29,17 +29,17 @@
                 <div class="nav-submenu">
                     <div class="nav-item px-3">
                         <NavLink class="nav-link" href="secUserC">
-                            <span class="oi oi-person" aria-hidden="true"></span> User List
+                            <span class="oi oi-person" aria-hidden="true"></span> Users
                         </NavLink>
                     </div>
                     <div class="nav-item px-3">
                         <NavLink class="nav-link" href="secGroup">
-                            <span class="oi oi-people" aria-hidden="true"></span> Roles(grupos)
+                            <span class="oi oi-people" aria-hidden="true"></span> Roles(groups)
                         </NavLink>
                     </div>
                     <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="tags">
-                            <span class="oi oi-tags" aria-hidden="true"></span> Tags
+                        <NavLink class="nav-link" href="userTags">
+                            <span class="oi oi-tags" aria-hidden="true"></span> Users tags
                         </NavLink>
                     </div>
                 </div>

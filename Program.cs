@@ -1,10 +1,5 @@
-using AutoMapper;
-using BlazorServerAppBanco.Data;
 using BlazorServerAppBanco.Models;
-using BlazorServerAppBanco.ModelsDTO;
 using BlazorServerAppBanco.Services;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 
@@ -13,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
+//builder.Services.AddSingleton<WeatherForecastService>();
 
 // Configurar AutoMapper
 builder.Services.AddAutoMapper(typeof(Program)); // Esto registra automáticamente todos los perfiles AutoMapper en la aplicación.
@@ -29,6 +24,7 @@ builder.Services.AddMudServices();
 builder.Services.AddScoped<ISecUserService, SecUserService>();
 builder.Services.AddScoped<ISecAppService, SecAppService>();
 builder.Services.AddScoped<ISecUserGroupService, SecUserGroupService>();
+builder.Services.AddScoped<ITagUserService, TagUserService>();
 
 var app = builder.Build();
 
@@ -56,3 +52,4 @@ app.MapFallbackToPage("/_Host");
 app.Run();
 
 //dotnet ef dbcontext scaffold "Host=localhost;Database=transactional_bank;Username=postgres;Password=12345" Npgsql.EntityFrameworkCore.PostgreSQL
+//dotnet ef dbcontext scaffold "Host=localhost;Database=transactional_bank;Username=postgres;Password=12345" Npgsql.EntityFrameworkCore.PostgreSQL -output Models -force

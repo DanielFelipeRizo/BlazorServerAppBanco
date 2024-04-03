@@ -14,19 +14,44 @@
 @if (secGroups?.Count() > 0)
 {
     <div class="products-container">
-        @foreach (var group in secGroups)
-        {
-            <div class="card">
 
-                <div class="card-body">
-                    <p>@group.Description</p>
-                    <p>
-                        <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="@(() => UpdateGroups(group))">a</MudButton>
-                        <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="@(() => DeleteGroups(group))">e</MudButton>
-                    </p>
-                </div>
-            </div>
-        }
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Descripcion</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var group in secGroups)
+                {
+                    <tr>
+                        <td>
+                            @if (group == editingGroup)
+                            {
+                                <input type="text" @bind="editedDescription" />
+                            }
+                            else
+                            {
+                                @group.Description
+                            }
+                        </td>
+                        <td>
+                            @if (group == editingGroup)
+                            {
+                                <MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="@(() => ConfirmUpdate(group))">Confirmar</MudButton>
+                                <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="@CancelUpdate">Cancelar</MudButton>
+                            }
+                            else
+                            {
+                                <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="@(() => UpdateGroups(group))">Actualizar</MudButton>
+                                <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="@(() => DeleteGroups(group))">Eliminar</MudButton>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 }
 else
@@ -34,9 +59,23 @@ else
     <p>No existen grupos</p>
 }
 
+@if (addingGroup)
+{
+    <div class="groups-container">
+        <input type="text" @bind="newGroupDescription" />
+        <MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="@ConfirmAdd">Confirmar</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="@CancelAdd">Cancelar</MudButton>
+    </div>
+}
+
 
 @code {
     public List<SecGroupDTO>? secGroups;
+    private SecGroupDTO? editingGroup;
+    private string? editedDescription = string.Empty;
+
+    private bool addingGroup = false;
+    private string newGroupDescription = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -50,17 +89,32 @@ else
 
     private void AddGroups()
     {
-        //navigationManager.NavigateTo("/addUser");
+        addingGroup = true;
     }
 
     private void UpdateGroups(SecGroupDTO secGroupDTO)
     {
-        //navigationManager.NavigateTo($"/updateUser/{userId}");
+        editingGroup = secGroupDTO;
+        editedDescription = secGroupDTO.Description;
+    }
+
+    private async Task ConfirmUpdate(SecGroupDTO secGroupDTO)
+    {
+        editingGroup = null;
+        secGroupDTO.Description = editedDescription;
+        await secUserGroupService.Update(secGroupDTO);
+        await Get();
+    }
+
+    private void CancelUpdate()
+    {
+        editingGroup = null;
+        editedDescription = string.Empty;
     }
 
     private async Task DeleteGroups(SecGroupDTO secGroupDTO)
     {
-        var confirmation = await JSRuntime.InvokeAsync<bool>("showSweetAlert", "Eliminar registro?", $"esta seguro que desea eliminar {secGroupDTO.Description}?");
+        var confirmation = await JSRuntime.InvokeAsync<bool>("showSweetAlert", "Eliminar registro?", $"¿Está seguro de que desea eliminar {secGroupDTO.Description}?");
         if (!confirmation)
         {
             return;
@@ -68,4 +122,22 @@ else
         await secUserGroupService.Delete(secGroupDTO);
         await Get();
     }
+
+    private async Task ConfirmAdd()
+    {
+        var newGroup = new SecGroupDTO { Description = newGroupDescription };
+        await secUserGroupService.Add(newGroup);
+        await Get();
+        addingGroup = false;
+        newGroupDescription = string.Empty;
+    }
+
+    private void CancelAdd()
+    {
+        addingGroup = false;
+        newGroupDescription = string.Empty;
+    }
 }
+
+<script src="alerts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

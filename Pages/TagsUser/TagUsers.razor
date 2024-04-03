@@ -1,0 +1,164 @@
+﻿@using BlazorServerAppBanco.Services;
+@using BlazorServerAppBanco.Models;
+@using BlazorServerAppBanco.ModelsDTO.Users;
+
+@page "/userTags"
+@inject ITagUserService tagUserService;
+@inject NavigationManager navigationManager;
+@inject IJSRuntime JSRuntime;
+
+<h3>TagUsers</h3>
+
+<MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="@(() => AddTags())">Add</MudButton>
+
+@if (tags?.Count() > 0)
+{
+    <div class="products-container">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripcion</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tag in tags)
+                {
+                    <tr>
+                        <td>
+                            @if (tag == editingTag)
+                            {
+                                <input type="text" @bind="editedName" />
+                            }
+                            else
+                            {
+                                @tag.UserTagsName
+                            }
+                        </td>
+
+                        <td>
+                            @if (tag == editingTag)
+                            {
+                                <input type="text" @bind="editedDescription" />
+                            }
+                            else
+                            {
+                                @tag.UserTagsDescription
+                            }
+                        </td>
+
+                        <td>
+                            @if (tag == editingTag)
+                            {
+                                <MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="@(() => ConfirmUpdate(tag))">Confirmar</MudButton>
+                                <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="@CancelUpdate">Cancelar</MudButton>
+                            }
+                            else
+                            {
+                                <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="@(() => UpdateTags(tag))">Actualizar</MudButton>
+                                <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="@(() => DeleteGroups(tag))">Eliminar</MudButton>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <p>No existen grupos</p>
+}
+
+@if (addingTag)
+{
+    <div class="tags-container">
+        <input type="text" @bind="newTagName" />
+        <input type="text" @bind="newTagDescription" />
+        <MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="@ConfirmAdd">Confirmar</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="@CancelAdd">Cancelar</MudButton>
+    </div>
+}
+
+
+@code {
+    public List<UserTagDTO>? tags;
+
+    private bool addingTag = false;
+    private string newTagName = string.Empty;
+    private string newTagDescription = string.Empty;
+
+    private UserTagDTO? editingTag;
+    private string? editedName = string.Empty;
+    private string? editedDescription = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Get();
+    }
+
+    public async Task Get()
+    {
+        tags = await tagUserService.GetAll();
+    }
+
+    private void AddTags()
+    {
+        addingTag = true;
+    }
+
+    private void UpdateTags(UserTagDTO userTagDTO)
+    {
+        editingTag = userTagDTO;
+        editedName = userTagDTO.UserTagsName;
+        editedDescription = userTagDTO.UserTagsDescription;
+    }
+
+    private async Task ConfirmUpdate(UserTagDTO userTagDTO)
+    {
+        editingTag = null;
+        userTagDTO.UserTagsName = editedName;
+        userTagDTO.UserTagsDescription = editedDescription;
+        await tagUserService.Update(userTagDTO);
+        await Get();
+    }
+
+    private void CancelUpdate()
+    {
+        editingTag = null;
+        editedDescription = string.Empty;
+    }
+
+    private async Task DeleteGroups(UserTagDTO userTagDTO)
+    {
+        var confirmation = await JSRuntime.InvokeAsync<bool>("showSweetAlert", "Eliminar registro?", $"¿Está seguro de que desea eliminar {userTagDTO.UserTagsDescription}?");
+        if (!confirmation)
+        {
+            return;
+        }
+        await tagUserService.Delete(userTagDTO);
+        await Get();
+    }
+
+    private async Task ConfirmAdd()
+    {
+        UserTagDTO newTag = new UserTagDTO { UserTagsName = newTagName, UserTagsDescription = newTagDescription };
+        await tagUserService.Add(newTag);
+        await Get();
+        addingTag = false;
+        newTagName = string.Empty;
+        newTagDescription = string.Empty;
+    }
+
+    private void CancelAdd()
+    {
+        addingTag = false;
+        newTagName = string.Empty;
+        newTagDescription = string.Empty;
+    }
+}
+
+<script src="alerts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

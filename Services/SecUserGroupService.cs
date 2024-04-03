@@ -28,7 +28,7 @@ namespace BlazorServerAppBanco.Services
             try
             {
                 SecGroup? secGroup = await _transactionalBankContext.SecGroups.FirstOrDefaultAsync(g => g.GroupId ==id);
-                return _mapper.Map<SecGroupDTO>(secGroup);
+               return _mapper.Map<SecGroupDTO>(secGroup);
             }
             catch (Exception e)
             {
@@ -52,12 +52,11 @@ namespace BlazorServerAppBanco.Services
 
         public async Task Update(SecGroupDTO secGroupDTO)
         {
-            SecGroupDTO currentSecGroup = await GetById(secGroupDTO.GroupId);
-            if(currentSecGroup != null)
+            SecGroup? currentSecGroup = await _transactionalBankContext.SecGroups.FirstOrDefaultAsync(g => g.GroupId == secGroupDTO.GroupId);
+
+            if (currentSecGroup != null)
             {
                 currentSecGroup.Description = secGroupDTO.Description;
-
-                _mapper.Map(secGroupDTO, currentSecGroup);
                 await _transactionalBankContext.SaveChangesAsync();
             }
             else
@@ -68,15 +67,15 @@ namespace BlazorServerAppBanco.Services
 
         public async Task Delete(SecGroupDTO secGroupDTO)
         {
-            SecGroupDTO currentSecGroup = await GetById(secGroupDTO.GroupId);
+            SecGroup? currentSecGroup = await _transactionalBankContext.SecGroups.FirstOrDefaultAsync(g => g.GroupId == secGroupDTO.GroupId);
             if(currentSecGroup != null)
             {
-                _transactionalBankContext.Remove(secGroupDTO);
+                _transactionalBankContext.Remove(currentSecGroup);
                 await _transactionalBankContext.SaveChangesAsync();
             }
             else
             {
-                throw new Exception($"el grupo {currentSecGroup.Description} no existe");
+                throw new Exception($"el grupo {secGroupDTO.Description} no existe");
             }
         }
     }
