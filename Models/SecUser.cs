@@ -7,6 +7,8 @@ public partial class SecUser
 {
     public string Login { get; set; } = null!;
 
+    public int GroupId { get; set; }
+
     public string Pswd { get; set; } = null!;
 
     public string? Name { get; set; }
@@ -40,6 +42,8 @@ public partial class SecUser
     public int? AuthAttempts { get; set; }
 
     public int? TagUser { get; set; }
+
+    public virtual SecGroup Group { get; set; } = null!;
 
     public virtual ICollection<SecUsersKeyHistory> SecUsersKeyHistories { get; set; } = new List<SecUsersKeyHistory>();
 

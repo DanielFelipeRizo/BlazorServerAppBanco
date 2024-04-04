@@ -2,14 +2,147 @@
 @using BlazorServerAppBanco.Services;
 @using BlazorServerAppBanco.ModelsDTO.Users;
 
-@page "/UpdateUser"
+@page "/updateUser/{currentUserIdParameter}";
 @inject ILogger<SecUserDTO> logger;
 @inject ISecUserService secUserService;
+@inject ISecUserGroupService secUserGroupService;
+@inject ITagUserService tagUserService;
 @inject NavigationManager navigationManager;
 @inject IJSRuntime JSRuntime;
 
+
+<PageTitle>Update - Users</PageTitle>
+
 <h3>UpdateUser</h3>
 
-@code {
 
+<button class="btn btn-primary" @onclick="GoToUsers">Go to Products</button>
+
+@if (user?.Login.Count() > 0)
+{
+    <EditForm Model="@user" OnSubmit="@updateUsers">
+        <div class="row">
+            <div class="col-8 form-group">
+                <label for="name">Nombre</label>
+                <InputText id="name" @bind-Value="user.Name" required class="form-control"></InputText>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-8 form-group">
+                <label for="tag">TagUser</label>
+                <InputSelect id="tag" @bind-Value="user.TagUser" required class="form-control">
+                    <option>@GetTagDescription(user.TagUser) </option>
+                    @foreach (var tag in tags)
+                    {
+                        <option value="@tag.UserTagId">@tag.UserTagsDescription</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-8 form-group">
+                <label for="email">Email</label>
+                <InputText id="email" @bind-Value="user.Email" required class="form-control"></InputText>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-8 form-group">
+                <label for="status">Status</label>
+                <InputSelect id="status" @bind-Value="user.UsrActive" required class="form-control">
+                    <option value="Y">Activo</option>
+                    <option value="N">Inactivo</option>
+                </InputSelect>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-8 form-group">
+                <label for="role">Rol</label>
+                <InputSelect id="tag" @bind-Value="user.GroupId" required class="form-control">
+                    <option>@GetRoleDescription(user.GroupId) </option>
+                    @foreach (var group in groups)
+                    {
+                        <option value="@group.GroupId">@group.Description</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+
+        <hr />
+        <button class="btn btn-primary" type="submit">Update</button>
+    </EditForm>
+}
+else
+{
+    <p>usuario no existe</p>
+}
+
+@code {
+    private SecUserDTO? user;
+    private List<SecGroupDTO> groups;
+    private List<UserTagDTO>? tags;
+
+    [Parameter]
+    public string currentUserIdParameter { get; set; } = string.Empty;
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        if (parameters.TryGetValue<string>(nameof(currentUserIdParameter), out var value))
+            if (value is not null)
+            {
+                currentUserIdParameter = value;
+            }
+        await base.SetParametersAsync(parameters);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        groups = await secUserGroupService.GetAll();
+        tags = await tagUserService.GetAll();
+
+        SecUserDTO? currentUser = await getUserForId(currentUserIdParameter);
+        user = new SecUserDTO
+        {
+            Login = currentUserIdParameter != null ? currentUserIdParameter : string.Empty,
+            Name = currentUser?.Name,
+            TagUser = currentUser?.TagUser,
+            Email = currentUser?.Email,
+            Pswd = currentUser.Pswd,
+            UsrActive = currentUser.UsrActive,
+            GroupId = currentUser.GroupId
+        };
+    }
+
+    private async Task<SecUserDTO?> getUserForId(string userId)
+    {
+        return await secUserService.GetById(userId);
+    }
+
+    private string GetTagDescription(int? userTagId)
+    {
+        UserTagDTO? tag = tags?.FirstOrDefault(t => t.UserTagId == userTagId);
+        return tag != null ? tag.UserTagsDescription : "Por definir";
+    }
+
+    private string GetRoleDescription(int groupId)
+    {
+        SecGroupDTO? role = groups?.FirstOrDefault(r => r.GroupId == groupId);
+        return role != null ? role.Description : "Por definir";
+    }
+
+    public async Task updateUsers()
+    {
+        await secUserService.Update(user);
+        //toastService.ShowSuccess($"Usuario -{user?.name}- actualizado");
+        GoToUsers();
+    }
+
+    private void GoToUsers()
+    {
+        navigationManager.NavigateTo("/secUserC");
+    }
 }

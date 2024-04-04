@@ -4,7 +4,9 @@
     {
         public string Login { get; set; } = null!;
 
-        public string Pswd { get; set; } = null!;
+        public int GroupId { get; set; }
+
+        public string Pswd { get; set; } = string.Empty;
 
         public string? Name { get; set; }
 
@@ -37,7 +39,5 @@
         public int? AuthAttempts { get; set; }
 
         public int? TagUser { get; set; }
-        public int? userRole { get; set; }
-
     }
 }

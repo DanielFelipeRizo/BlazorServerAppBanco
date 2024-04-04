@@ -23,7 +23,6 @@ builder.Services.AddMudServices();
 //inyectar dependencia de la carpeta services(inyector)
 builder.Services.AddScoped<ISecUserService, SecUserService>();
 builder.Services.AddScoped<ISecAppService, SecAppService>();
-builder.Services.AddScoped<ISecUserGroupService, SecUserGroupService>();
 builder.Services.AddScoped<ITagUserService, TagUserService>();
 
 var app = builder.Build();
@@ -51,5 +50,8 @@ app.MapFallbackToPage("/_Host");
 
 app.Run();
 
+//crear contexto a partir de la BD
 //dotnet ef dbcontext scaffold "Host=localhost;Database=transactional_bank;Username=postgres;Password=12345" Npgsql.EntityFrameworkCore.PostgreSQL
-//dotnet ef dbcontext scaffold "Host=localhost;Database=transactional_bank;Username=postgres;Password=12345" Npgsql.EntityFrameworkCore.PostgreSQL -output Models -force
+
+//actualizar la BD
+//dotnet ef dbcontext scaffold "Host=localhost;Database=transactional_bank;Username=postgres;Password=12345" Npgsql.EntityFrameworkCore.PostgreSQL --output-dir /Models --force

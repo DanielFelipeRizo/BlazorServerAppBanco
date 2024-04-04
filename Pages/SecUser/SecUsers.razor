@@ -5,6 +5,7 @@
 @page "/secUserC"
 @inject ILogger<SecUserDTO> logger;
 @inject ISecUserService secUserService;
+@inject ISecUserGroupService secUserGroupService;
 @inject NavigationManager navigationManager;
 @inject IJSRuntime JSRuntime;
 
@@ -37,7 +38,7 @@
                         <td>@user.Name</td>
                         <td>@user.Email</td>
                         <td>@(user.UsrActive == "Y" ? "Activo" : "Inactivo")</td>
-                        <td>por definir</td>
+                        <td>@GetRoleDescription(user.GroupId)</td>
                         <td>
                             <MudButton Variant="Variant.Filled" Color="Color.Info" @onclick="@(() => GoToUpdateUsers(user.Login))">a</MudButton>
                             <MudButton Variant="Variant.Filled" Color="Color.Error" @onclick="@(() => deleteUsers(user))">e</MudButton>
@@ -55,15 +56,23 @@ else
 
 @code {
     private List<SecUserDTO>? users;
+    private List<SecGroupDTO>? groups;
 
     protected override async Task OnInitializedAsync()
     {
         await Get();
     }
 
+    private string GetRoleDescription(int groupId)
+    {
+        SecGroupDTO? role = groups?.FirstOrDefault(r => r.GroupId == groupId);
+        return role != null ? role.Description : "Por definir";
+    }
+
     public async Task Get()
     {
         users = await secUserService.GetAll();
+        groups = await secUserGroupService.GetAll();
     }
 
     private void GoToAddUsers()

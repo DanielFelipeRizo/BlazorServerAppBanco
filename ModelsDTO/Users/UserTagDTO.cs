@@ -6,7 +6,7 @@
 
         public string? UserTagsName { get; set; } = string.Empty;
 
-        public string? UserTagsDescription { get; set; } = string.Empty;
+        public string UserTagsDescription { get; set; } = string.Empty;
 
         public bool? UserTagsStatus { get; set; } = true;
 

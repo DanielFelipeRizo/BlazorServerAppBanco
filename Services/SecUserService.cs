@@ -19,7 +19,7 @@ namespace BlazorServerAppBanco.Services
         public async Task<List<SecUserDTO>> GetAll()
         {
             List<SecUser> secUsers = await _transactionalBankContext.SecUsers.ToListAsync();
-            Console.WriteLine(secUsers);
+            //Console.WriteLine(secUsers);
             return _mapper.Map<List<SecUserDTO>>(secUsers);
             //return await _transactionalBankContext.SecUsers.ToListAsync();
         }
@@ -43,6 +43,8 @@ namespace BlazorServerAppBanco.Services
             {
                 SecUser secUser = _mapper.Map<SecUser>(secUserDTO);
                 secUser.UsrActive = "Y";
+                secUser.UsrDateCreationKey = DateTime.Now;
+                secUser.UsrDateExpKey = DateTime.Now.AddMonths(3);
                 await _transactionalBankContext.AddAsync(secUser);
                 //INSERT INTO sec_users_groups(login, secUserDTO.userRole)VALUES('". {login}."','". {Tusuario}. "')
                 return await _transactionalBankContext.SaveChangesAsync();

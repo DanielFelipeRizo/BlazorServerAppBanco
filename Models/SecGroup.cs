@@ -13,5 +13,7 @@ public partial class SecGroup
 
     public virtual ICollection<SecGroupsApp> SecGroupsApps { get; set; } = new List<SecGroupsApp>();
 
+    public virtual ICollection<SecUser> SecUsers { get; set; } = new List<SecUser>();
+
     public virtual ICollection<SecUser> Logins { get; set; } = new List<SecUser>();
 }

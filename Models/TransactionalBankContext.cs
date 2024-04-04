@@ -2551,6 +2551,7 @@ public partial class TransactionalBankContext : DbContext
             entity.Property(e => e.EntryDate)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("entry_date");
+            entity.Property(e => e.GroupId).HasColumnName("group_id");
             entity.Property(e => e.Name)
                 .HasMaxLength(500)
                 .HasColumnName("name");
@@ -2581,6 +2582,11 @@ public partial class TransactionalBankContext : DbContext
             entity.Property(e => e.ValidityCode)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("validity_code");
+
+            entity.HasOne(d => d.Group).WithMany(p => p.SecUsers)
+                .HasForeignKey(d => d.GroupId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_sec_users_groups");
 
             entity.HasOne(d => d.TagUserNavigation).WithMany(p => p.SecUsers)
                 .HasForeignKey(d => d.TagUser)
