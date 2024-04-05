@@ -1,0 +1,79 @@
+﻿@using BlazorServerAppBanco.ModelsDTO;
+@using BlazorServerAppBanco.Services;
+@using BlazorServerAppBanco.ModelsDTO.Users;
+
+@page "/secGroupApp";
+@inject ILogger<SecGroupAppDTO> logger;
+@inject ISecGroupAppService secGroupAppService;
+@inject NavigationManager navigationManager;
+@inject IJSRuntime JSRuntime;
+
+<PageTitle>SecGroupApps</PageTitle>
+<h3>SecGroupApps</h3>
+
+<h1>GroupApps</h1>
+
+@if(groupApps?.Count() > 0)
+{
+<div class="group-apps-container">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Modulo</th>
+                <th>Submodulo</th>
+                <th>Acceder</th>
+                <th>Insertar</th>
+                <th>Actualizar</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+             @foreach (var groupApp in groupApps.Where(g => g.GroupId == 1))
+            {
+                <tr>
+                    <td>@groupApp.Module</td>
+                    <td>@groupApp.Submodule</td>
+                        <td><input type="checkbox" checked="@permStrToBool(groupApp.PrivAccess)" @onclick="(e => UpdatePermission(groupApp, nameof(groupApp.PrivAccess), e))" /></td>
+                        <td><input type="checkbox" checked="@permStrToBool(groupApp.PrivInsert)" @onclick="(e => UpdatePermission(groupApp, nameof(groupApp.PrivInsert), e))" /></td>
+                        <td><input type="checkbox" checked="@permStrToBool(groupApp.PrivUpdate)" @onclick="(e => UpdatePermission(groupApp, nameof(groupApp.PrivUpdate), e))" /></td>
+                        <td><input type="checkbox" checked="@permStrToBool(groupApp.PrivDelete)" @onclick="(e => UpdatePermission(groupApp, nameof(groupApp.PrivDelete), e))" /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}
+else
+{
+    <p>No group apps</p>
+}
+
+@code {
+    private List<SecGroupAppDTO>? groupApps;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Get();
+    }
+
+    public async Task Get()
+    {
+        groupApps = await secGroupAppService.GetAll();
+    }
+
+    private bool permStrToBool(string? permStr) => permStr == "Y";
+
+    private async Task UpdatePermission(SecGroupAppDTO groupApp, string propertyName, MouseEventArgs e)
+    {
+        // Cambiar el valor de la propiedad correspondiente
+        var propertyInfo = typeof(SecGroupAppDTO).GetProperty(propertyName);
+        var currentValue = (string)propertyInfo.GetValue(groupApp);
+        var newValue = (currentValue == "Y") ? "N" : "Y";
+        propertyInfo.SetValue(groupApp, newValue);
+
+        // Llamar al servicio para actualizar el permiso en tu plataforma
+        await secGroupAppService.Update(groupApp);
+    }
+
+}

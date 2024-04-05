@@ -12,6 +12,7 @@ namespace BlazorServerAppBanco.ProfilesMapper
             CreateMap<SecApp, SecAppDTO>().ReverseMap();
             CreateMap<SecGroup, SecGroupDTO>().ReverseMap();
             CreateMap<UserTag, UserTagDTO>().ReverseMap();
+            CreateMap<SecGroupsApp, SecGroupAppDTO>().ReverseMap();
         }
     }
 }

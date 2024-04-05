@@ -23,7 +23,9 @@ builder.Services.AddMudServices();
 //inyectar dependencia de la carpeta services(inyector)
 builder.Services.AddScoped<ISecUserService, SecUserService>();
 builder.Services.AddScoped<ISecAppService, SecAppService>();
+builder.Services.AddScoped<ISecUserGroupService, SecUserGroupService>();
 builder.Services.AddScoped<ITagUserService, TagUserService>();
+builder.Services.AddScoped<ISecGroupAppService, SecGroupAppService>();
 
 var app = builder.Build();
 

@@ -18,10 +18,15 @@ namespace BlazorServerAppBanco.Services
 
         public async Task<List<SecUserDTO>> GetAll()
         {
-            List<SecUser> secUsers = await _transactionalBankContext.SecUsers.ToListAsync();
-            //Console.WriteLine(secUsers);
-            return _mapper.Map<List<SecUserDTO>>(secUsers);
-            //return await _transactionalBankContext.SecUsers.ToListAsync();
+            try
+            {
+                List<SecUser> secUsers = await _transactionalBankContext.SecUsers.ToListAsync();
+                return _mapper.Map<List<SecUserDTO>>(secUsers);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e.InnerException);
+            }
         }
 
         public async Task<SecUserDTO?> GetById(string id)
